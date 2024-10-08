@@ -54,24 +54,31 @@ def edit_contact():
     unique_identifier = input("Enter the email of the contact you want to edit: ")
     if unique_identifier in contact_dict:
         print("\nContact:", contact_dict[unique_identifier], sep="\n ")
-        action = input("What do you want to edit?: ")
-        if action == "Name":
-            new_name = input("Enter new name: ")
-            contact_dict[unique_identifier]['Name'] = new_name
-            print(f"\nName has been changed to {new_name}")
-            print("\nContact:", contact_dict[unique_identifier], sep="\n")
-        if action == "Phone":
-            new_phone = input("Enter new phone number: ")
-            contact_dict[unique_identifier]['Phone'] = new_phone
-            print(f"\nPhone number has been changed to {new_phone}")
-        if action == "Address":
-            new_address = input("Enter the new address: ")
-            contact_dict[unique_identifier]['Additional']['Adress'] = new_address
-            print(f"\nAddress has been changed to {new_address}")
-        if action == "Notes":
-            add_notes = input("Add additional notes here: ")
-            contact_dict[unique_identifier]['Additional']['Notes'] = add_notes
-            print("\nNotes have been successfully added")
+        while True:
+            action = input("\nWhat do you want to edit? (Name/Email/Phone/Address/Notes): ")
+            if action == "Name":
+                new_name = input("Enter new name: ")
+                contact_dict[unique_identifier]['Name'] = new_name
+                print(f"\nName has been changed to {new_name}")
+            if action == "Email":
+                new_email = input("Enter new email: ")
+                contact_dict[unique_identifier] = new_email
+                print(f"\nEmail has been changed to {new_email}")
+            if action == "Phone":
+                new_phone = input("Enter new phone number: ")
+                contact_dict[unique_identifier]['Phone'] = new_phone
+                print(f"\nPhone number has been changed to {new_phone}")
+            if action == "Address":
+                new_address = input("Enter the new address: ")
+                contact_dict[unique_identifier]['Additional']['Adress'] = new_address
+                print(f"\nAddress has been changed to {new_address}")
+            if action == "Notes":
+                add_notes = input("Add additional notes here: ")
+                contact_dict[unique_identifier]['Additional']['Notes'] = add_notes
+                print("\nNotes have been successfully added")
+            next_edit = input("\nWould you like to edit anything else? (y/n): ")
+            if next_edit == "n":
+                break
     else:
         print("\nEmail does not exist. Try again.")
 
@@ -104,7 +111,10 @@ def search_contact():
         print("\nEmail is not valid. Try again.")
 
 def show_contacts():
-    print("\nContacts:", contact_dict, sep="\n ")
+    if contact_dict:
+        print("\nContacts:", contact_dict, sep="\n ")
+    else:
+        print("\nThere are no contacts to display.")
 
 def export_contacts():
     with open("Contacts.txt", "w") as file:
@@ -112,12 +122,14 @@ def export_contacts():
         print("\nContacts exported successfully")
 
 def import_contacts():
-        with open("Contacts.txt", "r") as file:
-            contact_dict = json.load(file)
-            print("\nContacts were succesfully imported.")
-            print("\n")
-            print(contact_dict, sep="\n ")
-
+        try:
+            with open("Contacts.txt", "r") as file:
+                contact_dict = json.load(file)
+                print("\nContacts were succesfully imported.")
+                print("\n")
+                print(contact_dict, sep="\n ")
+        except FileNotFoundError:
+            print("\nThere is no text file in this directory. Please add one and try again.")
 while True:
     main_menu()
     try:
