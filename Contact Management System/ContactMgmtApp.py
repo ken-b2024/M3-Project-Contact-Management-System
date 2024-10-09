@@ -18,11 +18,13 @@ def main_menu():
 def new_contact():
     unique_identifier = input("Enter the email address of contact: ")
     pattern = (r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}")
-    if re.search(pattern, unique_identifier):
-        print("\nEmail successfully added")
-    else:
-        print("\nEmail address is not valid. Please enter a valid email.")
-        unique_identifier = input("Enter the email address of contact: ")
+    for i in unique_identifier:
+        if re.search(pattern, unique_identifier):
+            print("\nEmail successfully added")
+            break
+        else:
+            print("\nEmail address is not valid. Please enter a valid email.")
+            unique_identifier = input("Enter the email address of contact: ")
     user_name = input("Enter the name of the contact: ")
     phone_number = input("Enter the phone number (format:xxx-xxx-xxxx): ")
     for number in phone_number:
@@ -70,7 +72,7 @@ def edit_contact():
                 print(f"\nPhone number has been changed to {new_phone}")
             if action == "Address":
                 new_address = input("Enter the new address: ")
-                contact_dict[unique_identifier]['Additional']['Adress'] = new_address
+                contact_dict[unique_identifier]['Additional']['Address'] = new_address
                 print(f"\nAddress has been changed to {new_address}")
             if action == "Notes":
                 add_notes = input("Add additional notes here: ")
@@ -84,12 +86,12 @@ def edit_contact():
 
 def delete_contact():
     unique_identifier = input("Enter the email of the contact you want to delete: ")
-    if unique_identifier in contact_dict[unique_identifier]:
+    if unique_identifier in contact_dict:
         print("\nContact:", contact_dict[unique_identifier], sep="\n ")
         action = input("Are you sure you want to delete this contact? (y/n): ")
         if action == "y":
-            contact_dict[unique_identifier].clear()
-            print("Contact has been deleted.")
+            del contact_dict[unique_identifier]
+            print("\nContact has been deleted.")
         else:
             return
     else:
@@ -122,6 +124,7 @@ def export_contacts():
         print("\nContacts exported successfully")
 
 def import_contacts():
+        global contact_dict
         try:
             with open("Contacts.txt", "r") as file:
                 contact_dict = json.load(file)
@@ -149,7 +152,7 @@ while True:
         if menu_item == 7:
             import_contacts()
         if menu_item == 8:
-            print("\nThank you for using the Contact Management System! Goodbye!")
+            print("\nThank you for using the Contact Management System! Goodbye!\n")
             break
     except ValueError:
         print("\nInvalid selection. Please try again.")
